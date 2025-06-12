@@ -97,7 +97,6 @@ BroadcastRangeFunction genLocalBroadcastFunction(const BufferVector& out) {
 }
 
 void allreduce(const detail::AllreduceOptionsImpl& opts) {
-  printf("In gloo::allreduce\n");
   if (opts.elements == 0) {
     return;
   }
@@ -1340,7 +1339,6 @@ void distributed_naive_reduce(
 
 
 void shm(const detail::AllreduceOptionsImpl& opts) {
-  printf("In shm allreduce\n");
   if (!is_initialized) {
     int size = std::stoi(std::getenv("PMI_SIZE"));
     int rank = std::stoi(std::getenv("PMI_RANK"));
