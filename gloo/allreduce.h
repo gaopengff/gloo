@@ -15,6 +15,17 @@
 #include "gloo/context.h"
 #include "gloo/transport/unbound_buffer.h"
 
+#include "gloo/types.h"
+#include <errno.h>
+#include <fcntl.h>
+#include <immintrin.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/mman.h>
+#include <unistd.h>
+#include <assert.h>
+
 namespace gloo {
 
 namespace detail {
@@ -39,6 +50,13 @@ struct AllreduceOptionsImpl {
     UNSPECIFIED = 0,
     RING = 1,
     BCUBE = 2,
+    SHM = 3,
+  };
+
+  enum ScalarType {
+    BFLOAT16,
+    HALF,
+    FLOAT,
   };
 
   explicit AllreduceOptionsImpl(const std::shared_ptr<Context>& context)
@@ -53,6 +71,9 @@ struct AllreduceOptionsImpl {
 
   // Algorithm selection.
   Algorithm algorithm;
+
+  // Scalar type
+  ScalarType scalarType;
 
   // Input and output buffers.
   // The output is used as input if input is not specified.
@@ -90,12 +111,17 @@ class AllreduceOptions {
  public:
   using Func = detail::AllreduceOptionsImpl::Func;
   using Algorithm = detail::AllreduceOptionsImpl::Algorithm;
+  using ScalarType = detail::AllreduceOptionsImpl::ScalarType;
 
   explicit AllreduceOptions(const std::shared_ptr<Context>& context)
       : impl_(context) {}
 
   void setAlgorithm(Algorithm algorithm) {
     impl_.algorithm = algorithm;
+  }
+
+  void setScalarType(ScalarType scalarType) {
+    impl_.scalarType = scalarType;
   }
 
   template <typename T>
@@ -191,5 +217,12 @@ class AllreduceOptions {
 };
 
 void allreduce(const AllreduceOptions& opts);
+
+#ifndef __SHM_COLLECTIVES__
+#define __SHM_COLLECTIVES__
+#define VECTOR_LENGTH_IN_BYTES 32
+void shm_initialize(int size, int rank, char* addr_string, char* port_string);
+void shm(const detail::AllreduceOptionsImpl& opts);
+#endif
 
 } // namespace gloo
