@@ -19,6 +19,7 @@ namespace gloo {
 
 namespace detail {
 
+    
 struct AllreduceOptionsImpl {
   // This type describes the function to use for element wise reduction.
   //
