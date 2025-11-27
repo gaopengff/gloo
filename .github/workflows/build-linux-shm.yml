@@ -1,5 +1,5 @@
 ---
-name: CI-Linux
+name: CI-Linux-shm
 
 on: # yamllint disable-line rule:truthy
   push:
