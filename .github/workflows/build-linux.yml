@@ -4,7 +4,7 @@ name: CI-Linux
 on: # yamllint disable-line rule:truthy
   push:
     branches:
-      - gaopengf/shm
+      - main
   pull_request:
 
 permissions: read-all
