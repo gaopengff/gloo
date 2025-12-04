@@ -37,7 +37,7 @@ struct SharedData {
 };
 
 void shared_open(SharedData* data, const char* name, size_t nbytes) {
-   int d = shm_open(name, O_RDWR, S_IRUSR | S_IWUSR); 
+  int d = shm_open(name, O_RDWR, S_IRUSR | S_IWUSR);
   if (d != -1) {
     void* bytes = mmap(NULL, nbytes, PROT_READ | PROT_WRITE, MAP_SHARED, d, 0);
     data->name = name;
