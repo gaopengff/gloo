@@ -60,14 +60,14 @@ void shared_create(
     void* bytes,
     size_t nbytes) {
   int d = shm_open(name, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
-  if (d != -1 && ftruncate(d, nbytes) != -1) {
-    bytes = mmap(NULL, nbytes, PROT_READ | PROT_WRITE, MAP_SHARED, d, 0);
-    data->name = name;
-    data->descriptor = d;
-    data->bytes = bytes;
-    data->nbytes = nbytes;
+  if (d != -1) {
+    // printf("Before write nbytes: %ld\n", nbytes);
+    if (ftruncate(d, nbytes) != -1) {
+      shared_open(data, name, nbytes);
+    }
+    // printf("After write nbytes: %ld\n", nbytes);
+    close(d);
   } else {
-    data->descriptor = -1;
     printf("shared_create %s failed\n", name);
   }
 }
