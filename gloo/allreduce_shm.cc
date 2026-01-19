@@ -143,7 +143,6 @@ void reduce_all_buffers(
     char** buffers,
     ReductionFunction fn) {
   size_t offset = start_elements * element_size;
-
   memcpy(to_buffer + offset, buffers[0] + offset, num_elements * element_size);
   for (int i = 1; i < world_size; i++) {
     fn(to_buffer + offset,
