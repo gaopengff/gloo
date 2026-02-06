@@ -12,7 +12,6 @@
 #include <array>
 #include <cstring>
 
-#include "gloo/allreduce_shm.h"
 #include "gloo/common/logging.h"
 #include "gloo/math.h"
 #include "gloo/transport/device.h"
