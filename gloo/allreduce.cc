@@ -18,6 +18,10 @@
 #include "gloo/transport/device.h"
 #include "gloo/types.h"
 
+#ifndef _WIN32
+#include "gloo/allreduce_shm.h"
+#endif
+
 namespace gloo {
 
 namespace {
@@ -134,6 +138,8 @@ void allreduce(const detail::AllreduceOptionsImpl& opts) {
   }
 
   auto algorithm = opts.algorithm;
+
+  // const char* use_shm_allreduce = std::getenv("USE_SHM_ALLREDUCE");
 
 #ifndef _WIN32
   if (context->isIntraNode() && !context->getDevice()->hasGPUDirect()) {
