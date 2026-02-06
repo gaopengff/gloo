@@ -12,17 +12,26 @@ permissions: read-all
 jobs:
   build-linux:
     name: build on ubuntu
-    runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        cmake_args:
-          - ""
-          - "-DUSE_IBVERBS=ON -DUSE_LIBUV=ON -DUSE_TCP_OPENSSL_LINK=ON"
-          - "-DUSE_TCP_OPENSSL_LOAD=ON"
+        include:
+          - runner: ubuntu-latest
+            cmake_args: ""
+          - runner: ubuntu-latest
+            cmake_args: "-DUSE_IBVERBS=ON -DUSE_LIBUV=ON -DUSE_TCP_OPENSSL_LINK=ON"
+          - runner: ubuntu-latest
+            cmake_args: "-DUSE_TCP_OPENSSL_LOAD=ON"
+          - runner: ubuntu-24.04-arm
+            cmake_args: "-DUSE_LIBUV=ON -DUSE_TCP_OPENSSL_LINK=ON"
+
+    runs-on: ${{ matrix.runner }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Setup environment
         run: |
           sudo apt-get install -y libssl-dev
