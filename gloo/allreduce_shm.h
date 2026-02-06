@@ -36,9 +36,15 @@ struct AllreduceSharedMemoryData {
     char buffer[2 * NAIVE_ALLREDUCE_THRESHOLD + 2 * MAX_BUF_SIZE];
   };
 
-  AllreduceSharedMemoryData(int rank, int world_size)
+  AllreduceSharedMemoryData(
+      int rank,
+      int world_size,
+      pid_t root_pid,
+      uintptr_t root_context_addr)
       : rank(rank),
         world_size(world_size),
+        root_pid(root_pid),
+        root_context_addr(root_context_addr),
         current_buffer(0),
         state_idx(0),
         is_initialized(false) {}
@@ -47,6 +53,8 @@ struct AllreduceSharedMemoryData {
 
   int rank;
   int world_size;
+  pid_t root_pid;
+  uintptr_t root_context_addr;
   int current_buffer;
   int state_idx;
   bool is_initialized;
