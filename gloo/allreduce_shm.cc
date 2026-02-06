@@ -508,12 +508,12 @@ void shm(const detail::AllreduceOptionsImpl& opts) {
       bid.contextAddress = reinterpret_cast<uintptr_t>(context.get());
       for (int i = 1; i < context->size; i++) {
         tmp_ptr->send(i, slot);
-        tmp_ptr->waitSend();
+        tmp_ptr->waitSend(opts.timeout);
       }
     } else {
       lock.unlock();
       tmp_ptr->recv(0, slot);
-      tmp_ptr->waitRecv();
+      tmp_ptr->waitRecv(opts.timeout);
       lock.lock();
     }
 
